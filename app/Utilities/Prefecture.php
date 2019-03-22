@@ -112,4 +112,37 @@ class Prefecture
 
         return $pref;
     }
+
+    /**
+     * 複数都道府県が含まれる文字列の場合は、はじめに出てきたやつを返す
+     * 北海道東京都青森県: return 北海道
+     * suffix付き限定
+     * @param string|null $subject
+     * @return string|null
+     */
+    public function match(?string $subject): ?string
+    {
+        if (is_null($subject)) {
+            return null;
+        }
+
+        return $this->prefectureCollection->filter(function ($v) use ($subject) {
+            return mb_strstr($subject, $v) !== false;
+        })->first();
+    }
+
+    /**
+     * @param string|null $subject
+     * @return int|null
+     */
+    public function matchToId(?string $subject): ?int
+    {
+        $matched = $this->match($subject);
+
+        if (is_null($matched)) {
+            return null;
+        }
+
+        return $this->toId($matched);
+    }
 }

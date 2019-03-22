@@ -109,4 +109,51 @@ class PrefectureTest extends TestCase
             [0], [48]
         ];
     }
+
+    /**
+     * @dataProvider provideMatchParams
+     * @param string|null $subject
+     * @param string|null $expected
+     */
+    public function testMatch(?string $subject, ?string $expected)
+    {
+        $this->assertEquals($expected, $this->prefecture->match($subject));
+    }
+
+    /**
+     * @return array
+     */
+    public function provideMatchParams()
+    {
+        return [
+            ['北海道', '北海道'],
+            ['テスト北海道テスト', '北海道'],
+            ['テスト北海道テスト東京都青森県', '北海道'],
+            ['北海道北海道北海道', '北海道'],
+            ['テストテスト', null],
+            [null, null],
+        ];
+    }
+
+    /**
+     * @dataProvider provideMatchToIdParams
+     * @param string|null $subject
+     * @param int|null $expected
+     */
+    public function testMatchToId(?string $subject, ?int $expected)
+    {
+        $this->assertEquals($expected, $this->prefecture->matchToId($subject));
+    }
+
+    /**
+     * @return array
+     */
+    public function provideMatchToIdParams()
+    {
+        return [
+            ['北海道', 1],
+            ['テストテスト', null],
+            [null, null],
+        ];
+    }
 }

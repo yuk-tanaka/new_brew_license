@@ -5,6 +5,8 @@ namespace App\Utilities\Scrapers;
 use Illuminate\Support\Collection;
 use Symfony\Component\DomCrawler\Crawler;
 use InvalidArgumentException;
+use DB;
+use Throwable;
 
 class OldLicenseScraper extends Scraper
 {
@@ -75,14 +77,17 @@ class OldLicenseScraper extends Scraper
     /**
      * 実質createMany
      * @param Collection $formatted
+     * @throws Throwable
      */
     protected function createLicense(Collection $formatted): void
     {
-        foreach ($formatted as $row) {
-            $this->license->create($row + [
-                    'can_send_notification' => false,
-                ]);
-        }
+        DB::transaction(function () use ($formatted) {
+            foreach ($formatted as $row) {
+                $this->license->create($row + [
+                        'can_send_notification' => false,
+                    ]);
+            }
+        });
     }
 
     /**

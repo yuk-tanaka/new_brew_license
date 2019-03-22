@@ -8,7 +8,6 @@ use App\Utilities\Prefecture;
 use App\Utilities\Wareki;
 use Goutte\Client;
 use Illuminate\Support\Collection;
-use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\DomCrawler\Crawler;
 use InvalidArgumentException;
 use Log;
@@ -52,6 +51,7 @@ abstract class Scraper
         $this->prefecture = $prefecture;
         $this->wareki = $wareki;
         $this->crawled = collect([]);
+        $this->formatted = collect([]);
     }
 
     /**
@@ -62,14 +62,15 @@ abstract class Scraper
         foreach ($this->getUrls() as $url) {
             $crawler = $this->goutteClient->request('GET', $url);
 
-            if ($this->goutteClient->getResponse()->getStatus() == 200) {
+            //newScraperでまだページができていない場合は404
+            if ($this->goutteClient->getResponse()->getStatus() === 200) {
                 $this->crawl($crawler);
             }
         }
 
-        $this->format($this->crawled ?? collect([]));
+        $this->format($this->crawled);
 
-        $this->createLicense($this->formatted ?? collect([]));
+        $this->createLicense($this->formatted);
     }
 
     /**

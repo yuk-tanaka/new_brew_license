@@ -12,21 +12,29 @@ use App\Utilities\Wareki;
 use Carbon\Carbon;
 use Goutte\Client;
 use Illuminate\Console\Command;
+use DB;
+use Throwable;
 
 class ScrapeNew extends Command
 {
     /**
      * @var string
      */
-    protected $signature = 'scrape:new';
+    protected $signature = 'scrape:new {dateUrl?}';
 
     /**
      * @var string
      */
-    protected $description = 'scrape new license data';
+    protected $description = 'scrape new license data {dateUrl: e.g."h30/01"}';
 
     /** @var OldLicenseScraper */
     private $scraper;
+
+    /** @var ScrapeHistory */
+    private $scrapeHistory;
+
+    /** @var string */
+    private $nextDateUrl;
 
     /**
      * @param Client $goutteClient
@@ -40,16 +48,27 @@ class ScrapeNew extends Command
     {
         parent::__construct();
 
-        $nextDateUrl = $wareki->parseNextScrapingUrlString($scrapeHistory);
+        $this->scrapeHistory = $scrapeHistory;
 
-        $this->scraper = new NewLicenseScraper($goutteClient, $drinkType, $license, $prefecture, $wareki, $nextDateUrl);
+        $this->nextDateUrl = $wareki->parseNextScrapingUrlString($scrapeHistory);
+
+        $this->scraper = new NewLicenseScraper($goutteClient, $drinkType, $license, $prefecture, $wareki);
     }
 
     /**
      * @return void
+     * @throws Throwable
      */
     public function handle(): void
     {
-        $this->scraper->run();
+        $this->scraper->setNextDateUrl($this->argument('dateUrl') ?? $this->nextDateUrl);
+
+        DB::transaction(function () {
+            $this->scraper->run();
+
+            if (is_null($this->argument('dateUrl'))) {
+                $this->scrapeHistory->create(['scraped_at' => Carbon::now()]);
+            }
+        });
     }
 }
