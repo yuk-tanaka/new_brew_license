@@ -73,7 +73,7 @@ class Wareki
      * @param int $warekiYear
      * @return int
      */
-    static private function calcADYear(string $gengou, int $warekiYear): int
+    private function calcADYear(string $gengou, int $warekiYear): int
     {
         if (!in_array($gengou, self::WAREKI_LIST, true)) {
             throw new InvalidArgumentException('元号の値が不正');

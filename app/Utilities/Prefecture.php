@@ -62,19 +62,19 @@ class Prefecture
     ];
 
     /**
-     * Prefecture constructor.
-     */
-    public function __construct()
-    {
-        $this->prefectureCollection = collect(self::PREFECTURES);
-    }
-
-    /**
      * @return array
      */
     static public function getKeys(): array
     {
         return array_keys(self::PREFECTURES);
+    }
+
+    /**
+     * Prefecture constructor.
+     */
+    public function __construct()
+    {
+        $this->prefectureCollection = colle ct(self::PREFECTURES);
     }
 
     /**
