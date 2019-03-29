@@ -1,21 +1,51 @@
-# Lumen PHP Framework
+# new_brew_license
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/lumen-framework/v/unstable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
+## 概要
+- 新規開業する酒蔵・ブルワリーなどを見つけたいという試み
+- [国税庁](https://www.nta.go.jp/taxes/sake/menkyo/shinki/seizo/02.htm) より新規酒造免許取得者の名簿をスクレイピングする
+- スクレイピング結果のうち、「新規開業」のデータをDB保存＆LINE通知
+- お気持ち程度のAPI
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+## setup
+1. ```composer install```
+1. [Line Notify](https://notify-bot.line.me/ja/) からtokenを取得し、`.env` に記載
+1. ```php artisan migrate --seed```
+1. [cronエントリを追加](https://readouble.com/laravel/5.8/ja/scheduling.html) ※Laravelと同一の手順
 
-## Official Documentation
+## .env
+- LINE_NOTIFICATION_KEY string Line Notifyトークン
+- CAN_SEND_NOTIFICATION bool Lineに通知を送信するかどうか 
+- API_PAGINATION int 1回のAPIリクエストで取得できる最大件数
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+## API
 
-## Security Vulnerabilities
+### Licenses
+- GET /licenses
+- GET /licenses/id 
+- GET /licenses/search
+    - drink_type_id integer
+    - prefecture integer
+    - name string LIKE検索
+    - address string LIKE検索
+    - start date
+    - end date 許可日start~end期間
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+### DrinkTypes
+- GET /drinkTypes
 
-## License
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

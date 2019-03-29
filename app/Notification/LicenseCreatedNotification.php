@@ -7,7 +7,6 @@ use App\Eloquents\ScrapeHistory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Hinaloe\LineNotify\Message\LineMessage;
-use Illuminate\Notifications\Messages\SlackMessage;
 
 class LicenseCreatedNotification extends Notification
 {

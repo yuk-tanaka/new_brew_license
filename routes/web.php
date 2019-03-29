@@ -14,3 +14,7 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+$router->get('/licenses', 'LicenseController@list');
+$router->get('/licenses/{licenseId}', 'LicenseController@show');
+$router->get('/licenses/search', 'LicenseController@search');
+$router->get('/drinkTypes', 'DrinkTypeController@list');

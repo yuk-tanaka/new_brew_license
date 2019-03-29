@@ -70,6 +70,14 @@ class Prefecture
     }
 
     /**
+     * @return array
+     */
+    static public function getKeys(): array
+    {
+        return array_keys(self::PREFECTURES);
+    }
+
+    /**
      * @param string $pref
      * @param bool $hasSuffix
      * @return int
